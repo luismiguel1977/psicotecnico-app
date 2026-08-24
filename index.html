@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Psicotécnico — 5 Pruebas</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Psicotécnico">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>
+  :root{
+    --bg:#0b1020; --blue:#4f8df9; --blue-d:#2f6fd0; --blue-l:#8fc0ff;
+    --green:#3ddc84; --red:#ff5a5f; --gold:#ffce5c;
+    --glass:#ffffff14; --glass2:#ffffff1f; --line:#ffffff22;
+    --text:#f2f6ff; --muted:#9fb0cf; --shadow:0 18px 45px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%, #22325b 0%, var(--bg) 55%), var(--bg);
+    color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px 16px 46px;overflow-x:clip}
+  .wrap{width:100%;max-width:760px}
+
+  .top{position:sticky;top:0;z-index:50;padding:6px 0 12px;margin-bottom:6px;
+    background:linear-gradient(180deg,rgba(11,16,32,.92),rgba(11,16,32,.55),transparent);backdrop-filter:blur(8px)}
+  .title{font-size:17px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+  .title .logo{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;background:linear-gradient(145deg,#3a5b9e,#1e3a6e);box-shadow:inset 0 1px 0 #ffffff33, 0 4px 12px rgba(0,0,0,.4)}
+  .title .t{display:flex;flex-direction:column;line-height:1.05}
+  .title .t small{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+  .back{background:var(--glass);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;min-height:40px;display:inline-flex;align-items:center;gap:5px}
+  .back:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .back:hover{background:var(--glass2)}
+
+  .inst{background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-size:13px;line-height:1.55;color:#c9d5ee;margin-bottom:16px}
+  .inst b{color:#fff}
+
+  /* ===== MENÚ PRINCIPAL ===== */
+  .menu-grid{display:grid;gap:12px}
+  .card{background:linear-gradient(180deg,#1b2440,#151d34);border:1px solid var(--line);border-radius:20px;padding:18px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:transform .12s,box-shadow .2s;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .card:active{transform:scale(.98)}
+  .card:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .card::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ac,var(--blue));opacity:.9}
+  .card .ico{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;background:var(--accbg,#ffffff1a);box-shadow:inset 0 1px 0 #ffffff2a}
+  .card .tx{flex:1}
+  .card .tx b{font-size:15px;font-weight:800;display:block}
+  .card .tx small{font-size:11.5px;color:var(--muted);line-height:1.4;display:block;margin-top:3px}
+  .card .go{font-size:14px;color:var(--muted)}
+
+  .inst-pill{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .minipill{background:var(--glass);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:11px;font-weight:700;color:var(--muted)}
+  .minipill b{color:var(--gold)}
+
+  /* ===== BOTONES ===== */
+  .btn{font-size:13px;font-weight:700;padding:13px 12px;border-radius:14px;border:1px solid var(--line);background:var(--glass);color:var(--text);cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;text-align:center}
+  .btn:active{transform:scale(.97)}
+  .btn.on{background:linear-gradient(145deg,#3f74e0,#2653b3);border-color:#4c7fe6;color:#fff;box-shadow:0 5px 16px rgba(47,111,208,.4), inset 0 1px 0 #ffffff30}
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .btn.reiniciar{background:linear-gradient(145deg,#ff6a6e,#d63a40);border-color:#ff6a6e;color:#fff}
+  .btn.ghost{background:var(--glass2)}
+  .btn.green{background:linear-gradient(145deg,#3ddc84,#1aa75f);border-color:#3ddc84;color:#fff}
+  .press{display:block;width:100%;padding:22px;font-size:19px;font-weight:800;letter-spacing:.5px;border:none;border-radius:18px;color:#fff;cursor:pointer;margin-top:4px;
+    background:linear-gradient(145deg,#4f8df9,#2f6fd0);box-shadow:0 12px 28px rgba(47,111,208,.45), inset 0 1px 0 #ffffff40;transition:transform .06s,filter .2s}
+  .press:active{transform:scale(.97)}
+  .press:disabled{background:var(--glass2);color:#6f7c96;box-shadow:none;cursor:not-allowed}
+  .press:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+  .press.big-start{font-size:22px;padding:26px;background:linear-gradient(145deg,#3ddc84,#1aa75f);box-shadow:0 12px 28px rgba(61,220,132,.4), inset 0 1px 0 #ffffff40}
+
+  /* estadísticas */
+  .stats{display:flex;gap:8px;margin-top:12px}
+  .pill{flex:1;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:9px 12px;text-align:center}
+  .pill .k{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+  .pill .v{font-size:18px;font-weight:800;margin-top:2px}
+  .pill#score .v{color:var(--gold)} .pill#best .v{color:var(--green)}
+
+  /* ===== VISTA PRUEBA ===== */
+  .vista{background:linear-gradient(180deg,#1a2440,#141c32);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
+  .vh{font-size:17px;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .vh .ico{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--accbg,#ffffff1a)}
+  .vs{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.45}
+
+  /* reacción */
+  .react-box{position:relative;height:230px;border-radius:16px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);overflow:hidden;background:#0c1122;cursor:pointer;user-select:none}
+  .react-box .circle{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;text-align:center;padding:10px;transition:background .08s;color:#fff}
+  .react-box .circle.wait{background:linear-gradient(145deg,#ff6a6e,#d63a40)}
+  .react-box .circle.go{background:linear-gradient(145deg,#3ddc84,#1aa75f)}
+  .react-box .circle.idle{background:var(--glass2);color:var(--muted)}
+  .react-ms{text-align:center;font-size:40px;font-weight:800;margin-top:12px;color:var(--blue-l)}
+  .react-sub{text-align:center;font-size:12px;color:var(--muted)}
+
+  /* atención (rejilla) */
+  .grid{display:grid;gap:8px;margin-top:6px}
+  .cell{aspect-ratio:1;border-radius:12px;background:var(--glass2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:transform .08s,background .12s;user-select:none}
+  .cell:active{transform:scale(.92)}
+  .cell .check{position:absolute;font-size:10px;color:var(--green)}
+  .cell.marked{background:#0f2b25;border-color:var(--green)}
+  .cell.marked::after{content:"✓";color:var(--green)}
+  .cell.false{animation:shake .3s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+  /* diferencias */
+  .diff-grid{display:grid;gap:10px;margin-top:6px}
+  .diff-cell{aspect-ratio:1;border-radius:14px;background:var(--glass2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;transition:transform .1s;user-select:none}
+  .diff-cell:active{transform:scale(.9)}
+  .diff-cell.sel{background:#1c2a4a;border-color:var(--blue)}
+  .diff-cell.correct{background:#0f2b25;border-color:var(--green)}
+  .diff-cell.wrong{background:#2a1216;border-color:var(--red)}
+  .diff-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(56px,1fr));gap:10px}
+
+  /* memoria */
+  .mem-grid{display:grid;gap:10px;margin-top:6px}
+  .mem-cell{aspect-ratio:1;border-radius:14px;background:var(--glass2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;transition:all .1s;user-select:none}
+  .mem-cell.lit{background:linear-gradient(145deg,#3f74e0,#2653b3);border-color:#4c7fe6;box-shadow:0 0 14px rgba(79,141,249,.55), inset 0 1px 0 #ffffff30}
+  .mem-cell.guessed{background:#0f2b25;border-color:var(--green);box-shadow:0 0 12px rgba(61,220,132,.4)}
+  .mem-cell.wrong{animation:shake .3s}
+
+  /* feedback */
+  .feedback{min-height:22px;margin-top:10px;font-size:13.5px;font-weight:700;text-align:center;transition:color .2s}
+  .feedback.ok{color:var(--green)} .feedback.bad{color:var(--red)} .feedback.info{color:var(--blue-l)}
+
+  /* resultados */
+  .res{display:none;margin-top:14px;background:linear-gradient(180deg,#1c2642,#16203a);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:center}
+  .res.show{display:block;animation:pop .25s ease}
+  @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+  .res .big{font-size:30px;font-weight:800}
+  .res .ms{font-size:15px;font-weight:700;margin-top:6px}
+  .res .sub{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+  .good{color:var(--green)}.bad{color:var(--red)}.mid1{color:var(--gold)}
+  .apilado{display:flex;gap:8px;margin-top:14px}.apilado .btn{flex:1}
+
+  .history{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-top:16px;backdrop-filter:blur(8px)}
+  .history h3{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .hrow{display:flex;justify-content:space-between;font-size:12.5px;padding:7px 0;border-top:1px solid #ffffff12;color:#c9d5ee}
+  .hrow:first-of-type{border-top:none}
+  .hrow .p{font-weight:800}
+  .hrow .ok{color:var(--green)} .hrow .badl{color:var(--red)}
+
+  .install-bar{position:fixed;bottom:12px;left:12px;right:12px;max-width:640px;margin:0 auto;background:#1b2540;border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:100;box-shadow:var(--shadow)}
+  .install-bar[hidden]{display:none}
+  .install-txt{flex:1}.install-txt b{font-size:13px;display:block}.install-txt small{font-size:11px;color:var(--muted)}
+  .install-btn{background:linear-gradient(145deg,#3ddc84,#1aa75f);border:none;color:#fff;font-weight:700;padding:11px 15px;border-radius:11px;cursor:pointer;min-height:42px}
+  .install-x{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:0 6px}
+  .foot{margin-top:18px;text-align:center;font-size:10.5px;color:var(--muted);line-height:1.5}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="title">
+      <div class="logo">🎯</div>
+      <div class="t">Psicotécnico <small>Prácticas de conducción</small></div>
+      <div style="flex:1"></div>
+      <button class="back hidden" id="backBtn">← Menú</button>
+    </div>
+  </div>
+
+  <!-- ===== MENÚ PRINCIPAL ===== -->
+  <div id="home">
+    <div class="inst">🛡️ <b>Entrenador de psicotécnico</b> para pruebas de conducción. Elige una prueba y practica. Cada una guarda tu mejor puntuación.</div>
+    <div class="inst-pill"><span class="minipill">🎯 Anticipación</span><span class="minipill">⚡ Reacción</span><span class="minipill">🔍 Atención</span><span class="minipill">🧩 Diferencias</span><span class="minipill">🧠 Memoria</span></div>
+    <div class="menu-grid">
+      <div class="card" data-test="anticipacion" style="--ac:var(--blue);--accbg:#24406e">
+        <div class="ico">🎯</div>
+        <div class="tx"><b>Anticipación</b><small>La pelota entra en el túnel: pulsa justo cuando sale</small></div>
+        <div class="go">›</div>
+      </div>
+      <div class="card" data-test="reaccion" style="--ac:var(--green);--accbg:#1f4638">
+        <div class="ico">⚡</div>
+        <div class="tx"><b>Tiempo de reacción</b><small>Toca lo más rápido posible cuando la luz se ponga verde</small></div>
+        <div class="go">›</div>
+      </div>
+      <div class="card" data-test="atencion" style="--ac:var(--gold);--accbg:#4a3f1e">
+        <div class="ico">🔍</div>
+        <div class="tx"><b>Atención</b><small>Tacha todos los símbolos que te pida</small></div>
+        <div class="go">›</div>
+      </div>
+      <div class="card" data-test="diferencias" style="--ac:#c084fc;--accbg:#3d2a5a">
+        <div class="ico">🧩</div>
+        <div class="tx"><b>Percepción de diferencias</b><small>Encuentra la figura que es distinta</small></div>
+        <div class="go">›</div>
+      </div>
+      <div class="card" data-test="memoria" style="--ac:var(--blue-l);--accbg:#23324e">
+        <div class="ico">🧠</div>
+        <div class="tx"><b>Memoria visual</b><small>Recuerda dónde están las figuras y adivina la posición</small></div>
+        <div class="go">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ANTICIPACIÓN ===== -->
+  <div id="v-ant" class="hidden">
+    <div class="stats">
+      <div class="pill"><div class="k">Ronda</div><div class="v" id="ant-round">1</div></div>
+      <div class="pill" id="scorePill"><div class="k">Puntos</div><div class="v" id="ant-score">0</div></div>
+      <div class="pill"><div class="k">Récord</div><div class="v" id="ant-best">0</div></div>
+    </div>
+    <div class="vista" style="margin-top:12px">
+      <div class="vh"><span class="ico" style="background:#24406e">🎯</span> Anticipación</div>
+      <div class="vs">La pelota avanza y entra en el túnel. Pulsa justo cuando creas que sale (línea azul). La velocidad cambia cada ronda.</div>
+      <div class="menu hidden" id="ant-menu">
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button class="btn on" id="ant-modeTunel">🌑 Túnel</button>
+          <button class="btn" id="ant-modeVer">👁️ Ver siempre</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <button class="btn" data-antdiff="Lento">🐢 Lento</button>
+          <button class="btn on" data-antdiff="Medio">⏱️ Medio</button>
+          <button class="btn" data-antdiff="Rápido">⚡ Rápido</button>
+        </div>
+        <button class="press big-start" id="ant-start">▶ EMPEZAR</button>
+      </div>
+      <div id="ant-game" class="hidden">
+        <div class="road-wrap">
+          <div class="lane-line"></div><div class="lane-line b"></div>
+          <div class="central"></div>
+          <div class="tunnel" id="ant-tunnel"></div>
+          <div class="meta" id="ant-meta"><span class="meta-txt">SALIDA</span></div>
+          <div class="ball" id="ant-ball"></div>
+          <div class="marcador" id="ant-marcador" hidden></div>
+        </div>
+        <button class="press" id="ant-press" disabled>PULSA CUANDO SALGA</button>
+        <div class="feedback" id="ant-feedback"></div>
+        <div class="res" id="ant-res">
+          <div class="big" id="ant-resBig"></div>
+          <div class="ms" id="ant-resMs"></div>
+          <div class="sub" id="ant-resSub"></div>
+          <div class="apilado">
+            <button class="btn" id="ant-again">🔁 Otra vez</button>
+            <button class="btn reiniciar" id="ant-reset">🔄 Reiniciar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== REACCIÓN ===== -->
+  <div id="v-re" class="hidden">
+    <div class="stats">
+      <div class="pill"><div class="k">Intento</div><div class="v" id="re-intento">1/5</div></div>
+      <div class="pill"><div class="k">Mejor (ms)</div><div class="v" id="re-best">0</div></div>
+      <div class="pill"><div class="k">Último</div><div class="v" id="re-last">—</div></div>
+    </div>
+    <div class="vista" style="margin-top:12px">
+      <div class="vh"><span class="ico" style="background:#1f4638">⚡</span> Tiempo de reacción</div>
+      <div class="vs">Espera a que el círculo se ponga <b style="color:var(--green)">verde</b> y toca lo más rápido posible. Si tocas antes, cuenta como fallo.</div>
+      <div class="react-box" id="re-box">
+        <div class="circle idle" id="re-circle">Toca para empezar</div>
+      </div>
+      <div class="react-ms" id="re-ms">—</div>
+      <div class="react-sub" id="re-sub">5 intentos · se calcula tu tiempo medio</div>
+      <div class="feedback" id="re-feedback"></div>
+      <div class="res" id="re-res">
+        <div class="big" id="re-resBig"></div>
+        <div class="ms" id="re-resMs"></div>
+        <div class="sub" id="re-resSub"></div>
+        <div class="apilado"><button class="btn green" id="re-again">🔁 Repetir</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ATENCIÓN ===== -->
+  <div id="v-at" class="hidden">
+    <div class="stats">
+      <div class="pill"><div class="k">Aciertos</div><div class="v" id="at-aciertos">0</div></div>
+      <div class="pill"><div class="k">Fallos</div><div class="v" id="at-fallos">0</div></div>
+      <div class="pill"><div class="k">Tiempo</div><div class="v" id="at-tiempo">0s</div></div>
+    </div>
+    <div class="vista" style="margin-top:12px">
+      <div class="vh"><span class="ico" style="background:#4a3f1e">🔍</span> Atención</div>
+      <div class="vs">Toca <b style="color:var(--gold)">todos</b> los símbolos que te pida. Date prisa pero no te equivoques.</div>
+      <div class="feedback" id="at-obj" style="font-size:16px;color:var(--gold);font-weight:800">Toca todos los ●</div>
+      <div class="grid" id="at-grid"></div>
+      <button class="press green" id="at-start" style="margin-top:14px">▶ EMPEZAR</button>
+      <div class="feedback" id="at-feedback"></div>
+      <div class="res" id="at-res">
+        <div class="big" id="at-resBig"></div>
+        <div class="ms" id="at-resMs"></div>
+        <div class="sub" id="at-resSub"></div>
+        <div class="apilado"><button class="btn green" id="at-again">🔁 Otra vez</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DIFERENCIAS ===== -->
+  <div id="v-di" class="hidden">
+    <div class="stats">
+      <div class="pill"><div class="k">Ronda</div><div class="v" id="di-ronda">1/5</div></div>
+      <div class="pill"><div class="k">Aciertos</div><div class="v" id="di-ok">0</div></div>
+    </div>
+    <div class="vista" style="margin-top:12px">
+      <div class="vh"><span class="ico" style="background:#3d2a5a">🧩</span> Percepción de diferencias</div>
+      <div class="vs">Todas las figuras son iguales <b>menos una</b>. Toca la que es distinta.</div>
+      <div class="diff-row" id="di-grid"></div>
+      <button class="press green" id="di-start" style="margin-top:14px">▶ EMPEZAR</button>
+      <div class="feedback" id="di-feedback"></div>
+      <div class="res" id="di-res">
+        <div class="big" id="di-resBig"></div>
+        <div class="ms" id="di-resMs"></div>
+        <div class="sub" id="di-resSub"></div>
+        <div class="apilado"><button class="btn green" id="di-again">🔁 Otra vez</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MEMORIA ===== -->
+  <div id="v-me" class="hidden">
+    <div class="stats">
+      <div class="pill"><div class="k">Ronda</div><div class="v" id="me-ronda">1</div></div>
+      <div class="pill"><div class="k">Aciertos</div><div class="v" id="me-ok">0</div></div>
+      <div class="pill"><div class="k">Nivel</div><div class="v" id="me-best">0</div></div>
+    </div>
+    <div class="vista" style="margin-top:12px">
+      <div class="vh"><span class="ico" style="background:#23324e">🧠</span> Memoria visual</div>
+      <div class="vs">Se encenderán unas casillas durante <b>2 segundos</b>. Memoriza qué posiciones se iluminan y tócalas después.</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="btn" data-memlev="3">Fácil (3)</button>
+        <button class="btn on" data-memlev="5">Medio (5)</button>
+        <button class="btn" data-memlev="8">Difícil (8)</button>
+      </div>
+      <div class="mem-grid" id="me-grid"></div>
+      <button class="press green" id="me-start" style="margin-top:14px">▶ EMPEZAR</button>
+      <div class="feedback" id="me-feedback"></div>
+      <div class="res" id="me-res">
+        <div class="big" id="me-resBig"></div>
+        <div class="ms" id="me-resMs"></div>
+        <div class="sub" id="me-resSub"></div>
+        <div class="apilado"><button class="btn green" id="me-again">🔁 Otra vez</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="install-bar" id="install-bar" hidden>
+    <div class="install-txt"><b>📲 Instalar como app</b><small>Para abrir sin conexión</small></div>
+    <button class="install-btn" id="install-btn">Instalar</button>
+    <button class="install-x" id="install-x" aria-label="Cerrar">×</button>
+  </div>
+</div>
+
+<style>
+  /* estilos carretera reutilizados */
+  .road-wrap{position:relative;height:230px;border-radius:16px;overflow:hidden;background:radial-gradient(180px 60px at 50% -10%, #3a5b9e55, transparent),linear-gradient(180deg,#2e3450 0%,#262c44 55%,#1e2438 100%);border:1px solid #ffffff18;box-shadow:inset 0 0 40px #00000055}
+  .road-wrap::before{content:"";position:absolute;left:0;right:0;top:0;height:16px;background:linear-gradient(180deg,#2f523688,#283f2a55);opacity:.9}
+  .road-wrap::after{content:"";position:absolute;left:0;right:0;bottom:0;height:14px;background:linear-gradient(0deg,#2f523688,#283f2a55);opacity:.9}
+  .lane-line{position:absolute;left:0;right:0;top:20%;height:2px;background:#ffffff1f;pointer-events:none;z-index:0}
+  .lane-line.b{top:80%}
+  .central{position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;background:repeating-linear-gradient(90deg,#f4f6f9 0 26px,transparent 26px 52px);opacity:.85;pointer-events:none;z-index:1;box-shadow:0 0 6px #ffffff30}
+  .tunnel{position:absolute;top:0;bottom:0;width:70px;z-index:3;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#05070c,#0a0d16 55%,#05070c);border-left:4px solid #101728;border-right:4px solid #4a5c86;box-shadow:0 0 30px #000000aa, inset 0 0 26px #000}
+  .tunnel::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:66px;height:66px;border:5px solid #5266a0;border-radius:50%;background:radial-gradient(circle at 45% 38%, #1a2340 0%, #06080f 60%);box-shadow:0 0 18px #5266a088, inset 0 0 24px #000}
+  .tunnel::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 50% 45%, #0a0e18, #000)}
+  .meta{position:absolute;top:0;bottom:0;width:5px;background:linear-gradient(180deg,#8fc0ff,#4f8df9,#8fc0ff);z-index:5;transform:translateX(-2px);box-shadow:0 0 14px #4f8df9}
+  .meta-txt{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;color:#8fc0ff;letter-spacing:1.5px;white-space:nowrap;z-index:6;text-shadow:0 1px 4px #000}
+  .ball{position:absolute;top:50%;width:36px;height:36px;margin-top:-18px;border-radius:50%;z-index:6;transition:none;background:radial-gradient(circle at 35% 30%, #ffe0c4, #ff9a6a 35%, #4f8df9 70%, #2f6fd0);box-shadow:0 0 20px rgba(120,160,255,.8), 0 3px 8px rgba(0,0,0,.5)}
+  .marcador{position:absolute;top:0;bottom:0;width:5px;background:linear-gradient(180deg,#ff5a5f,#ff8f8f);z-index:5;opacity:.95;box-shadow:0 0 12px #ff5a5f}
+</style>
+
+<script>
+  // ============================================================
+  //  APP PSICOTÉCNICO — 5 pruebas
+  // ============================================================
+  (function(){
+    "use strict";
+    var $=function(id){return document.getElementById(id);};
+    // lectura segura de números en localStorage (evita NaN corruptos)
+    function lsNum(k,fb){ var v=parseFloat(localStorage.getItem(k)); return isFinite(v)?v:fb; }
+    // lectura segura de arrays JSON (evita que JSON.parse rompa toda la app si se corrompe)
+    function lsArr(k,fb){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return Array.isArray(v)?v:fb; }catch(e){ return fb; } }
+    var home=$('home'), backBtn=$('backBtn');
+
+    // Router básico: mostrar una vista, ocultar el resto
+    var vistas={anticipacion:'v-ant',reaccion:'v-re',atencion:'v-at',diferencias:'v-di',memoria:'v-me'};
+    var viewToTest={'v-ant':'anticipacion','v-re':'reaccion','v-at':'atencion','v-di':'diferencias','v-me':'memoria'};
+
+    // Bloqueo temporal de un botón (evita doble-toque que lance dos rondas)
+    function tapLock(id){
+      var b=$(id); if(!b||b.disabled)return;
+      b.disabled=true; setTimeout(function(){ b.disabled=false; },500);
+    }
+
+    function show(viewId){
+      if(viewId){
+        home.classList.add('hidden');
+        Object.keys(vistas).forEach(function(t){ var v=document.getElementById(vistas[t]); if(v)v.classList.add('hidden'); });
+        document.getElementById(viewId).classList.remove('hidden');
+        backBtn.classList.remove('hidden');
+      } else {
+        // volver al menú -> mostrar home, ocultar vistas
+        home.classList.remove('hidden');
+        Object.keys(vistas).forEach(function(t){ var v=document.getElementById(vistas[t]); if(v)v.classList.add('hidden'); });
+        backBtn.classList.add('hidden');
+      }
+      window.scrollTo(0,0);
+    }
+    backBtn.addEventListener('click', function(){ cancelAll(); show(null); });
+
+    // Limpia timers/rAF pendientes al salir de una prueba (evita estado "zombie")
+    function cancelAll(){
+      if(ant.raf){cancelAnimationFrame(ant.raf); ant.raf=null;}
+      ant.running=false; ant.runP=null;
+      if(re.hideTimer){clearTimeout(re.hideTimer); re.hideTimer=null;}
+      if(re.waitTimer){clearTimeout(re.waitTimer); re.waitTimer=null;}
+      if(me.hideTimer){clearTimeout(me.hideTimer); me.hideTimer=null;}
+      if(di.nextTimer){clearTimeout(di.nextTimer); di.nextTimer=null;}
+    }
+
+    // Click en tarjetas
+    document.querySelectorAll('.card[data-test]').forEach(function(c){
+      c.addEventListener('click', function(){
+        var t=c.getAttribute('data-test');
+        show(vistas[t]);
+        if(t==='anticipacion') antInit();
+        if(t==='reaccion') reInit();
+        if(t==='atencion') atInit();
+        if(t==='diferencias') diInit();
+        if(t==='memoria') meInit();
+      });
+    });
+
+    // -------------------- ANTICIPACIÓN --------------------
+    var ant={mode:'tunel',diff:'Medio',W:0,xIn:0,xOut:0,raf:null,running:false,runP:null,round:1,score:0,best:lsNum('pstc-best',0),hist:lsArr('pstc-hist',[])};
+    $('ant-best').textContent=ant.best;
+    function antInit(){ ant.round=1; ant.score=0; $('ant-score').textContent='0'; $('ant-round').textContent='1'; $('ant-best').textContent=ant.best; $('ant-menu').classList.remove('hidden'); $('ant-game').classList.add('hidden'); antApply(); }
+    function antApply(){
+      $('ant-modeTunel').className='btn'+(ant.mode==='tunel'?' on':'');
+      $('ant-modeVer').className='btn'+(ant.mode==='ver'?' on':'');
+      document.querySelectorAll('[data-antdiff]').forEach(function(b){b.className='btn'+(b.getAttribute('data-antdiff')===ant.diff?' on':'');});
+    }
+    $('ant-modeTunel').addEventListener('click',function(){ant.mode='tunel';antApply();});
+    $('ant-modeVer').addEventListener('click',function(){ant.mode='ver';antApply();});
+    document.querySelectorAll('[data-antdiff]').forEach(function(b){
+      b.addEventListener('click',function(){ant.diff=b.getAttribute('data-antdiff');antApply();});
+    });
+    function antMeasure(){
+      ant.W=document.querySelector('#v-ant .road-wrap').clientWidth;
+      var c=0.58*ant.W; ant.xIn=c-35; ant.xOut=c+35;
+      $('ant-tunnel').style.left=ant.xIn+'px'; $('ant-meta').style.left=ant.xOut+'px';
+    }
+    var antSpeed={Lento:{tmin:2400,tmax:3600},Medio:{tmin:1800,tmax:2700},Rapido:{tmin:1200,tmax:1900}};
+    function antStart(){
+      $('ant-round').textContent=ant.round;
+      antMeasure();
+      $('ant-res').classList.remove('show');
+      $('ant-feedback').textContent='';
+      $('ant-marcador').hidden=true;
+      var b=$('ant-ball'); b.hidden=false; b.style.opacity='1';
+      var cfg=antSpeed[ant.diff], T=cfg.tmin+Math.random()*(cfg.tmax-cfg.tmin);
+      var t0=performance.now();
+      function fr(now){
+        if(!ant.running||!ant.runP)return;
+        var dt=now-t0, p=dt/T;
+        if(p>=1){p=1; antDone(); return;}
+        var cx=p*ant.W;
+        b.style.left=(cx-18)+'px';
+        if(ant.mode==='tunel'){ if(cx>=ant.xIn&&cx<ant.xOut) b.style.opacity='0'; else b.style.opacity='1'; }
+        else b.style.opacity='1';
+        ant.raf=requestAnimationFrame(fr);
+      }
+      ant.runP={T:T,t0:t0,hit:false};
+      ant.running=true;
+      var pr=$('ant-press'); pr.disabled=false; pr.textContent='PULSA CUANDO SALGA';
+      ant.raf=requestAnimationFrame(fr);
+    }
+    function antPress(){
+      if(!ant.running||!ant.runP||ant.runP.hit)return;
+      ant.runP.hit=true; ant.running=false; cancelAnimationFrame(ant.raf);
+      var elapsed=performance.now()-ant.runP.t0;
+      var cx=ant.runP.T===0?0:((elapsed/ant.runP.T)*ant.W);
+      var diffPx=cx-ant.xOut, errPx=Math.abs(diffPx);
+      var pxPerMs=(ant.runP.T>0)?(ant.W/ant.runP.T):(ant.W/1200);
+      var errMs=pxPerMs>0?Math.round(errPx/pxPerMs):Math.round(errPx);
+      var pts=Math.max(0,Math.round(100-(errPx/ant.W)*340)); if(pts<0)pts=0;
+      $('ant-marcador').style.left=cx+'px'; $('ant-marcador').hidden=false;
+      $('ant-ball').style.opacity='0';
+      ant.score+=pts; $('ant-score').textContent=ant.score;
+      var big=$('ant-resBig'),ms=$('ant-resMs'),sub=$('ant-resSub');
+      big.className='big '+(pts>=85?'good':(pts>=60?'mid1':'bad'));
+      big.textContent=pts+' pts';
+      ms.className='ms '+(pts>=85?'good':(pts>=60?'mid1':'bad'));
+      ms.textContent='± '+errMs+' ms '+(diffPx>0?'(tarde)':'(pronto)');
+      sub.textContent=pts>=85?'¡Casi perfecto!':(pts>=60?'¡Bien hecho!':'Observa la velocidad');
+      $('ant-res').classList.add('show');
+      if(ant.best<ant.score){ant.best=ant.score;$('ant-best').textContent=ant.best;localStorage.setItem('pstc-best',String(ant.best));}
+      ant.hist.push({pts:pts,err:errMs}); if(ant.hist.length>12)ant.hist.shift(); localStorage.setItem('pstc-hist',JSON.stringify(ant.hist));
+      ant.round++; $('ant-round').textContent=ant.round;
+      var pr=$('ant-press'); pr.disabled=true; pr.textContent='— FIN —';
+    }
+    function antDone(){
+      if(ant.runP&&!ant.runP.hit){
+        ant.runP.hit=true; ant.running=false;
+        if(ant.raf){cancelAnimationFrame(ant.raf); ant.raf=null;}
+        var b=$('ant-ball'); b.style.opacity='1';
+        var pr=$('ant-press'); pr.disabled=true;
+        var big=$('ant-resBig'),ms=$('ant-resMs'),sub=$('ant-resSub');
+        big.className='big bad'; big.textContent='0 pts';
+        ms.className='ms bad'; ms.textContent='Se te pasó';
+        sub.textContent='Observa la velocidad y pulsa antes de que salga';
+        $('ant-res').classList.add('show');
+        ant.round++;
+      }
+    }
+    $('ant-start').addEventListener('click',function(){ tapLock('ant-start'); $('ant-menu').classList.add('hidden'); $('ant-game').classList.remove('hidden'); antStart(); });
+    $('ant-press').addEventListener('click',antPress);
+    $('ant-again').addEventListener('click',function(){$('ant-res').classList.remove('show');antStart();});
+    $('ant-reset').addEventListener('click',function(){
+      ant.round=1;ant.score=0;$('ant-score').textContent='0';$('ant-round').textContent='1';
+      ant.hist=[];localStorage.setItem('pstc-hist','[]');
+      $('ant-res').classList.remove('show');antStart();
+    });
+
+    // -------------------- REACCIÓN --------------------
+    var re={step:0,intentos:5,times:[],best:lsNum('pstc-rebest',0),last:null};
+    $('re-best').textContent=re.best;
+    function reInit(){ re.step=0; re.times=[]; re.goTime=0; $('re-intento').textContent='1/5'; $('re-ms').textContent='—'; $('re-last').textContent='—'; reSetIdle('Toca para empezar'); $('re-feedback').textContent=''; $('re-res').classList.remove('show'); }
+    function reSetIdle(t){ var c=$('re-circle'); c.className='circle idle'; c.textContent=t; }
+    function reRun(){
+      if(re.step>=re.intentos){ reFinish(); return; }
+      re.step++; $('re-intento').textContent=re.step+'/5';
+      var c=$('re-circle'); c.className='circle wait'; c.textContent='Espera…';
+      $('re-feedback').textContent='Espera a que se ponga verde'; $('re-feedback').className='feedback info';
+      var wait=1000+Math.random()*2200;
+      if(re.waitTimer){clearTimeout(re.waitTimer);}
+      re.waitTimer=setTimeout(function(){
+        re.waitTimer=null;
+        if(re.step>re.intentos)return;
+        c.className='circle go'; c.textContent='¡TOCA YA!';
+        re.goTime=performance.now();
+      },wait);
+    }
+    $('re-box').addEventListener('click',function(){
+      var c=$('re-circle');
+      if(c.classList.contains('idle')){
+        reRun();
+      } else if(c.classList.contains('go')){
+        var ms=Math.round(performance.now()-re.goTime);
+        if(!isFinite(ms)||re.goTime===0){ reSetIdle('Reintenta'); return; }
+        re.last=ms; $('re-last').textContent=ms+' ms';
+        $('re-ms').textContent=ms+' ms';
+        $('re-feedback').textContent='⚡ '+ms+' ms'; $('re-feedback').className='feedback ok';
+        if(re.best===0||ms<re.best){re.best=ms;$('re-best').textContent=ms;localStorage.setItem('pstc-rebest',String(ms));}
+        c.className='circle idle'; c.textContent='Bien';
+        re.times.push(ms);
+        if(re.hideTimer){clearTimeout(re.hideTimer);}
+        re.hideTimer=setTimeout(reRun,900);
+      } else if(c.classList.contains('wait')){
+        reSetIdle('Demasiado pronto!');
+        $('re-feedback').textContent='❌ Tarde no — tocaste antes de tiempo'; $('re-feedback').className='feedback bad';
+        if(re.waitTimer){clearTimeout(re.waitTimer); re.waitTimer=null;}
+        if(re.hideTimer){clearTimeout(re.hideTimer);}
+        re.hideTimer=setTimeout(reRun,1000);
+      }
+    });
+    function reFinish(){
+      var valid=re.times; var avg=valid.length?Math.round(valid.reduce(function(a,b){return a+b;},0)/valid.length):0;
+      var sub=$('re-resSub'),big=$('re-resBig'),ms=$('re-resMs');
+      big.className='big '+(avg>0&&avg<=350?'good':(avg<=800?'mid1':'bad'));
+      big.textContent=avg>0?avg+' ms':'— ms';
+      ms.className='ms';
+      ms.textContent='Media de '+valid.length+' intentos';
+      sub.textContent=avg>0&&avg<=350?'¡Reacción excelente!':(avg<=800?'Reacción normal':'Trabaja la velocidad de reacción');
+      $('re-res').classList.add('show');
+      $('re-feedback').textContent=''; 
+      var c=$('re-circle'); c.className='circle idle'; c.textContent='Terminado';
+    }
+    $('re-again').addEventListener('click',reInit);
+
+    // -------------------- ATENCIÓN --------------------
+    var SYMS=['●','▲','■','★','◆'];
+    var at={aciertos:0,fallos:0,obj:'●',target:0,active:false,start:0};
+    function atBuild(){
+      var grid=$('at-grid'), n=36;
+      grid.style.gridTemplateColumns='repeat(6,1fr)';
+      grid.innerHTML='';
+      at.target=Math.floor(Math.random()*SYMS.length);
+      at.obj=SYMS[at.target];
+      for(var i=0;i<n;i++){
+        var cell=document.createElement('div'); cell.className='cell';
+        cell.textContent=SYMS[Math.floor(Math.random()*SYMS.length)];
+        (function(c){c.addEventListener('click',function(){atTap(c);});})(cell);
+        grid.appendChild(cell);
+      }
+      $('at-obj').textContent='Toca todos los '+at.obj;
+      atCountTarget();
+    }
+    function atCountTarget(){
+      at.remaining=0;
+      document.querySelectorAll('#at-grid .cell').forEach(function(c){ if(c.textContent===at.obj) at.remaining++; });
+      $('at-obj').textContent='Toca todos los '+at.obj+' · quedan '+at.remaining;
+    }
+    function atTap(c){
+      if(!at.active)return;
+      if(c.classList.contains('marked'))return;
+      if(c.textContent===at.obj){
+        c.classList.add('marked'); at.aciertos++; $('at-aciertos').textContent=at.aciertos;
+        at.remaining--;
+        if(at.remaining<=0){ at.active=false; atFinish(); }
+        else $('at-obj').textContent='Toca todos los '+at.obj+' · quedan '+at.remaining;
+      } else {
+        at.fallos++; $('at-fallos').textContent=at.fallos;
+        c.classList.add('false'); setTimeout(function(){c.classList.remove('false');},350);
+      }
+    }
+    function atFinish(){
+      var t=Math.round((performance.now()-at.start)/1000);
+      $('at-tiempo').textContent=t+'s';
+      var big=$('at-resBig'),ms=$('at-resMs'),sub=$('at-resSub');
+      var precision=Math.round((at.aciertos/(at.aciertos+at.fallos))*100);
+      big.className='big '+(precision>=90?'good':(precision>=70?'mid1':'bad'));
+      big.textContent=precision+'%';
+      ms.className='ms'; ms.textContent='Precisión · '+at.aciertos+' aciertos, '+at.fallos+' fallos';
+      sub.textContent='En '+t+' s';
+      $('at-res').classList.add('show');
+    }
+    function atInit(){ at.aciertos=0; at.fallos=0; at.active=false; $('at-aciertos').textContent='0'; $('at-fallos').textContent='0'; $('at-tiempo').textContent='0s'; atBuild(); $('at-res').classList.remove('show'); $('at-feedback').textContent=''; }
+    $('at-start').addEventListener('click',function(){ tapLock('at-start'); atInit(); at.active=true; at.start=performance.now(); $('at-feedback').textContent='¡A tocar!'; $('at-feedback').className='feedback ok'; });
+    $('at-again').addEventListener('click',function(){ atInit(); });
+
+    // -------------------- DIFERENCIAS --------------------
+    var di={ronda:0,max:5,ok:0};
+    function diBuild(){
+      var grid=$('di-grid'), n=8;
+      di.ronda++;
+      $('di-ronda').textContent=di.ronda+'/5';
+      var figuras=['●','▲','■','★','◆','♥','✚','⬟'];
+      // forma "distinta" = versión hueca del mismo símbolo (percepción real, no tamaño)
+      var hueca={'●':'○','▲':'△','■':'□','★':'☆','◆':'◇','♥':'♡','✚':'✕','⬟':'⬢'};
+      var base=figuras[Math.floor(Math.random()*figuras.length)];
+      var diffIdx=Math.floor(Math.random()*n);
+      grid.innerHTML='';
+      for(var i=0;i<n;i++){
+        var cell=document.createElement('div'); cell.className='diff-cell';
+        cell.textContent=i===diffIdx?hueca[base]:base;
+        if(i===diffIdx) cell.dataset.diff='1';
+        (function(c){c.addEventListener('click',function(){diTap(c);});})(cell);
+        grid.appendChild(cell);
+      }
+    }
+    function diTap(c){
+      if(!c.dataset.diff){
+        c.classList.add('wrong'); setTimeout(function(){c.classList.remove('wrong');},350);
+        return;
+      }
+      c.classList.add('correct');
+      di.ok++; $('di-ok').textContent=di.ok;
+      if(di.ronda>=di.max){ diFinish(); return; }
+      $('di-feedback').textContent='¡Bien! Siguiente'; $('di-feedback').className='feedback ok';
+      if(di.nextTimer){clearTimeout(di.nextTimer);}
+      di.nextTimer=setTimeout(diBuild,700);
+    }
+    function diFinish(){
+      var big=$('di-resBig'),sub=$('di-resSub');
+      big.className='big '+(di.ok>=4?'good':'mid1');
+      big.textContent=di.ok+'/5';
+      sub.textContent=di.ok>=4?'¡Buena percepción!':'Sigue buscando diferencias';
+      $('di-res').classList.add('show');
+    }
+    function diInit(){ if(di.nextTimer){clearTimeout(di.nextTimer); di.nextTimer=null;} di.ronda=0; di.ok=0; $('di-ok').textContent='0'; $('di-ronda').textContent='1/5'; $('di-res').classList.remove('show'); $('di-feedback').textContent=''; diBuild(); }
+    $('di-start').addEventListener('click',function(){ tapLock('di-start'); diInit(); });
+    $('di-again').addEventListener('click',function(){ diInit(); });
+
+    // -------------------- MEMORIA (solo luces, sin figuras) --------------------
+    var me={level:5,max:9,ok:0,round:1,best:lsNum('pstc-mebest',0),showCells:[],lit:new Set()};
+    $('me-best').textContent=me.best;
+    function meBuild(){
+      var grid=$('me-grid'); grid.style.gridTemplateColumns='repeat(3,1fr)';
+      grid.innerHTML=''; me.showCells=[]; me.lit=new Set();
+      for(var i=0;i<9;i++){
+        var cell=document.createElement('div'); cell.className='mem-cell';
+        (function(c){c.addEventListener('click',function(){meTap(c);});})(cell);
+        grid.appendChild(cell);
+      }
+      // elegir posiciones aleatorias que se ENCENDERÁN
+      var pos=[]; while(pos.length<me.level){ var x=Math.floor(Math.random()*9); if(pos.indexOf(x)<0)pos.push(x); }
+      pos.forEach(function(x){ me.lit.add(x); me.showCells.push(x); });
+    }
+    function meShow(){
+      meBuild();
+      var grid=$('me-grid');
+      // encender solo las posiciones elegidas (sin texto, solo luz)
+      me.showCells.forEach(function(x){ grid.children[x].classList.add('lit'); });
+      $('me-feedback').textContent='Memoriza las posiciones…'; $('me-feedback').className='feedback info';
+      if(me.hideTimer){clearTimeout(me.hideTimer);}
+      me.hideTimer=setTimeout(function(){ meHide(); },2000);
+    }
+    function meHide(){
+      // apagar TODAS las luces (quitar la clase lit) para que no quede ninguna revelada
+      var grid=$('me-grid');
+      Array.prototype.forEach.call(grid.children,function(c){ c.classList.remove('lit'); });
+      $('me-feedback').textContent='Ahora toca las posiciones que se encendieron'; $('me-feedback').className='feedback info';
+      me.phase='guess';
+    }
+    function meTap(c){
+      if(me.phase!=='guess')return;
+      if(c.classList.contains('guessed')||c.classList.contains('wrong'))return;
+      var idx=Array.prototype.indexOf.call(c.parentNode.children,c);
+      if(me.lit.has(idx)){
+        c.classList.add('guessed'); me.ok++; $('me-ok').textContent=me.ok;
+        if(me.ok>=me.level){ me.phase='done'; meFinish(); }
+      } else {
+        c.classList.add('wrong'); setTimeout(function(){c.classList.remove('wrong');},350);
+      }
+    }
+    function meFinish(){
+      var big=$('me-resBig'),ms=$('me-resMs'),sub=$('me-resSub');
+      big.className='big '+(me.ok>=me.level?'good':'mid1');
+      big.textContent=me.ok+'/'+me.level;
+      ms.className='ms'; ms.textContent='Posiciones recordadas';
+      sub.textContent=me.ok>=me.level?'¡Memoria perfecta!':(me.ok>=Math.floor(me.level/2)?'Bien':'Repite, puedes más');
+      $('me-res').classList.add('show');
+      if(me.ok>=me.level&&me.best<me.level){me.best=me.level;$('me-best').textContent=me.best;localStorage.setItem('pstc-mebest',String(me.best));}
+      me.round++; $('me-ronda').textContent=me.round;
+    }
+    function meInit(){ if(me.hideTimer){clearTimeout(me.hideTimer); me.hideTimer=null;} me.ok=0; $('me-ok').textContent='0'; $('me-ronda').textContent=String(me.round); $('me-res').classList.remove('show'); $('me-feedback').textContent=''; me.phase='idle'; meBuild(); }
+    document.querySelectorAll('[data-memlev]').forEach(function(b){
+      b.addEventListener('click',function(){
+        me.level=parseInt(b.getAttribute('data-memlev'),10);
+        document.querySelectorAll('[data-memlev]').forEach(function(x){x.className='btn'+(x===b?' on':'');});
+        meInit();
+      });
+    });
+    $('me-start').addEventListener('click',function(){ tapLock('me-start'); me.round=1; meInit(); meShow(); });
+    $('me-again').addEventListener('click',function(){ me.ok=0; $('me-ok').textContent='0'; meShow(); });
+
+    // SW e instalación
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      window.addEventListener('load',function(){ navigator.serviceWorker.register('service-worker.js').catch(function(){}); });
+    }
+    var deferred=null;
+    window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;$('install-bar').hidden=false;});
+    $('install-btn').addEventListener('click',async function(){ if(!deferred)return; deferred.prompt(); await deferred.userChoice; deferred=null; $('install-bar').hidden=true; });
+    $('install-x').addEventListener('click',function(){ $('install-bar').hidden=true; });
+
+    show(null);
+  })();
+</script>
+</body>
+</html>
